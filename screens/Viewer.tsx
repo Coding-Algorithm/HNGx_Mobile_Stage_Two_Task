@@ -24,7 +24,10 @@ interface CvInfoType {
 export const Viewer = ({cvInfo}: {cvInfo: CvInfoType}) => {
   return (
     <View style={styles.container}>
-      <ScrollView>
+      <ScrollView
+        contentContainerStyle={{
+          paddingBottom: 100,
+        }}>
         {Object.keys(cvInfo).map(item => (
           <View key={item} style={styles.itemWrapper}>
             <Text style={styles.title}>
