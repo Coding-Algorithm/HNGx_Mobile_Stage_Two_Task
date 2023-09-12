@@ -1,24 +1,6 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
-import React, {useState} from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  KeyboardAvoidingView,
-  Platform,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  Text,
-  TextInput,
-  View,
-  useColorScheme,
-} from 'react-native';
-import { colors } from '../App';
+import React from 'react';
+import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import {colors} from '../App';
 
 interface CvInfoType {
   fullName: {
@@ -41,38 +23,15 @@ interface CvInfoType {
 
 export const Viewer = ({cvInfo}: {cvInfo: CvInfoType}) => {
   return (
-    <View
-      style={{
-        width: '100%',
-        paddingHorizontal: 20,
-        paddingTop: 50,
-      }}>
+    <View style={styles.container}>
       <ScrollView>
         {Object.keys(cvInfo).map(item => (
-          <View
-            key={item}
-            style={{
-              marginBottom: 30,
-            }}>
-            <Text
-              style={{
-                textTransform: 'capitalize',
-                fontWeight: '600',
-                marginBottom: 5,
-                color: colors.black,
-              }}>
+          <View key={item} style={styles.itemWrapper}>
+            <Text style={styles.title}>
               {cvInfo[item as keyof typeof cvInfo].title}
             </Text>
 
-            <Text
-              style={{
-                width: '100%',
-                paddingVertical: 20,
-                backgroundColor: colors.field,
-                borderRadius: 8,
-                paddingHorizontal: 10,
-                color: colors.fieldText,
-              }}>
+            <Text style={styles.value}>
               {cvInfo[item as keyof typeof cvInfo].value}
             </Text>
           </View>
@@ -81,3 +40,28 @@ export const Viewer = ({cvInfo}: {cvInfo: CvInfoType}) => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    width: '100%',
+    paddingHorizontal: 20,
+    paddingTop: 50,
+  },
+  itemWrapper: {
+    marginBottom: 30,
+  },
+  title: {
+    textTransform: 'capitalize',
+    fontWeight: '600',
+    marginBottom: 5,
+    color: colors.black,
+  },
+  value: {
+    width: '100%',
+    paddingVertical: 20,
+    backgroundColor: colors.field,
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    color: colors.fieldText,
+  },
+});

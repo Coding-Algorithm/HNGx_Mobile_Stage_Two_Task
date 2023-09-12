@@ -1,22 +1,13 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+import React from 'react';
 
-import React, {useState} from 'react';
-import type {PropsWithChildren} from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
-  SafeAreaView,
   ScrollView,
-  StatusBar,
+  StyleSheet,
   Text,
   TextInput,
   View,
-  useColorScheme,
 } from 'react-native';
 import {colors} from '../App';
 
@@ -40,68 +31,32 @@ interface CvInfoType {
 }
 
 export const Editor = ({
-  saveEdit,
   editorData,
   setEditorData,
 }: {
-  saveEdit: (data: CvInfoType) => void;
-  setShowEditor: React.Dispatch<boolean>;
   editorData: CvInfoType;
-  setEditorData: React.Dispatch<CvInfoType>;
+  setEditorData: React.Dispatch<(arg: CvInfoType) => CvInfoType>;
 }) => {
-
-    const prevData
-
-  const [localData, setLocalData] = useState(editorData);
-
   return (
-    <View
-      style={{
-        width: '100%',
-        paddingHorizontal: 20,
-        paddingTop: 50,
-      }}>
+    <View style={styles.container}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'padding'}>
         <ScrollView
-          contentContainerStyle={{
-            paddingBottom: 150,
-          }}
+          contentContainerStyle={styles.containerContentStyle}
           showsVerticalScrollIndicator={false}>
-          {Object.keys(localData).map(item => (
-            <View
-              key={item}
-              style={{
-                marginBottom: 30,
-              }}>
-              <Text
-                style={{
-                  textTransform: 'capitalize',
-                  fontWeight: '600',
-                  marginBottom: 5,
-                  color: colors.black,
-                }}>
-                {localData[item as keyof typeof localData].title}
+          {Object.keys(editorData).map(item => (
+            <View key={item} style={styles.itemWrapper}>
+              <Text style={styles.title}>
+                {editorData[item as keyof typeof editorData].title}
               </Text>
 
               <TextInput
-                style={{
-                  width: '100%',
-                  paddingVertical: 14,
-                  backgroundColor: colors.field,
-                  borderRadius: 8,
-                  paddingHorizontal: 10,
-                  color: colors.fieldText,
-                  borderWidth: 1,
-                  borderColor: colors.fieldText,
-                }}
-                placeholder={localData[item as keyof typeof localData].value}
+                style={styles.value}
+                placeholder={editorData[item as keyof typeof editorData].value}
                 onChangeText={e => {
-                  setLocalData(prev => {
-                    console.log(editorData[item].value);
-                    console.log(localData[item]?.value);
-                    prev[item].value = e;
-                    return prev;
+                  setEditorData(prev => {
+                    prev[item as keyof typeof prev].value = e;
+                    return {...prev};
                   });
                 }}
               />
@@ -112,3 +67,33 @@ export const Editor = ({
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    width: '100%',
+    paddingHorizontal: 20,
+    paddingTop: 50,
+  },
+  containerContentStyle: {
+    paddingBottom: 150,
+  },
+  itemWrapper: {
+    marginBottom: 30,
+  },
+  title: {
+    textTransform: 'capitalize',
+    fontWeight: '600',
+    marginBottom: 5,
+    color: colors.black,
+  },
+  value: {
+    width: '100%',
+    paddingVertical: 14,
+    backgroundColor: colors.field,
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    color: colors.fieldText,
+    borderWidth: 1,
+    borderColor: colors.fieldText,
+  },
+});

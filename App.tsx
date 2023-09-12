@@ -5,19 +5,8 @@
  * @format
  */
 
-import React, {useRef, useState} from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  KeyboardAvoidingView,
-  Platform,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  Text,
-  TextInput,
-  View,
-  useColorScheme,
-} from 'react-native';
+import React, {useState} from 'react';
+import {SafeAreaView, StatusBar, Text, View} from 'react-native';
 import {Viewer} from './screens/Viewer';
 import {Editor} from './screens/Editor';
 
@@ -51,8 +40,6 @@ export const colors = {
 };
 
 function App(): JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
   const initialData = {
     fullName: {
       title: 'Full Name',
@@ -75,8 +62,28 @@ function App(): JSX.Element {
   const [showEditor, setShowEditor] = useState(false);
   const [cvInfo, setCvInfo] = useState<CvInfoType>(initialData);
 
-  const saveEdit = (data: CvInfoType) => {
-    setCvInfo(data);
+  // hard coded this because padding initialData would make both cvInfo and editorData use same reference whether I destructure or not
+  const [editorData, setEditorData] = useState<CvInfoType>({
+    fullName: {
+      title: 'Full Name',
+      value: 'Ibrahim Taofeek Opeyemi',
+    },
+    slackName: {
+      title: 'Slack Name',
+      value: 'Ibrahim Taofeek',
+    },
+    githubHandle: {
+      title: 'Github Handle',
+      value: 'coding-algorithm',
+    },
+    personalBio: {
+      title: 'Personal Bio',
+      value: 'Full stack react native engineer',
+    },
+  });
+
+  const saveEdit = () => {
+    setCvInfo(editorData);
   };
 
   return (
@@ -137,16 +144,10 @@ function App(): JSX.Element {
         ) : null}
       </View>
 
-      {!showEditor ? (
-        <Viewer setShowEditor={setShowEditor} cvInfo={cvInfo} />
-      ) : null}
+      {!showEditor ? <Viewer cvInfo={cvInfo} /> : null}
 
       {showEditor ? (
-        <Editor
-          saveEdit={saveEdit}
-          setShowEditor={setShowEditor}
-          editorData={{...cvInfo}}
-        />
+        <Editor setEditorData={setEditorData} editorData={editorData} />
       ) : null}
     </SafeAreaView>
   );
