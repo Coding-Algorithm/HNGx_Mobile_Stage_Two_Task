@@ -6,7 +6,7 @@
  */
 
 import React, {useState} from 'react';
-import {SafeAreaView, StatusBar, Text, View} from 'react-native';
+import {SafeAreaView, StatusBar, StyleSheet, Text, View} from 'react-native';
 import {Viewer} from './screens/Viewer';
 import {Editor} from './screens/Editor';
 
@@ -62,60 +62,20 @@ function App(): JSX.Element {
   const [showEditor, setShowEditor] = useState(false);
   const [cvInfo, setCvInfo] = useState<CvInfoType>(initialData);
 
-  // hard coded this because padding initialData would make both cvInfo and editorData use same reference whether I destructure or not
-  const [editorData, setEditorData] = useState({
-    fullName: {
-      title: 'Full Name',
-      value: 'Ibrahim Taofeek Opeyemi',
-    },
-    slackName: {
-      title: 'Slack Name',
-      value: 'Ibrahim Taofeek',
-    },
-    githubHandle: {
-      title: 'Github Handle',
-      value: 'coding-algorithm',
-    },
-    personalBio: {
-      title: 'Personal Bio',
-      value: 'Full stack react native engineer',
-    },
-  });
-
-  const saveEdit = () => {
-    setCvInfo(editorData);
+  const saveEdit = (data: CvInfoType) => {
+    setCvInfo(data);
     setShowEditor(false);
   };
 
   const cancel = () => {
-    console.log(cvInfo);
-
-    setEditorData(cvInfo);
     setShowEditor(false);
   };
 
   return (
     <SafeAreaView>
       <StatusBar barStyle={false ? 'light-content' : 'dark-content'} />
-      <View
-        style={{
-          width: '100%',
-          height: 100,
-          backgroundColor: colors.primary,
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'flex-end',
-          paddingVertical: 20,
-        }}>
-        <Text
-          style={{
-            width: '60%',
-            textAlign: 'left',
-            fontSize: 28,
-            fontWeight: 'bold',
-            color: 'white',
-            paddingHorizontal: 20,
-          }}>
+      <View style={styles.header}>
+        <Text style={styles.headerText}>
           {showEditor ? 'CV Editor' : 'CV Viewer'}
         </Text>
       </View>
@@ -125,15 +85,30 @@ function App(): JSX.Element {
       ) : null}
 
       {showEditor ? (
-        <Editor
-          setEditorData={setEditorData}
-          saveEdit={saveEdit}
-          cancel={cancel}
-          editorData={editorData}
-        />
+        <Editor cvInfo={cvInfo} saveEdit={saveEdit} cancel={cancel} />
       ) : null}
     </SafeAreaView>
   );
 }
 
 export default App;
+
+const styles = StyleSheet.create({
+  header: {
+    width: '100%',
+    height: 100,
+    backgroundColor: colors.primary,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end',
+    paddingVertical: 20,
+  },
+  headerText: {
+    width: '60%',
+    textAlign: 'left',
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: 'white',
+    paddingHorizontal: 20,
+  },
+});

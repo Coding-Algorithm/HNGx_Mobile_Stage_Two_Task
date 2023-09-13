@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {
   KeyboardAvoidingView,
@@ -32,61 +32,65 @@ interface CvInfoType {
 }
 
 export const Editor = ({
-  editorData,
+  cvInfo,
   saveEdit,
   cancel,
-  setEditorData,
 }: {
-  editorData: CvInfoType;
-  saveEdit: () => void;
+  cvInfo: CvInfoType;
+  saveEdit: (data: CvInfoType) => void;
   cancel: () => void;
-  setEditorData: React.Dispatch<(arg: CvInfoType) => CvInfoType>;
 }) => {
+  const [localData, setLocalData] = useState(
+    JSON.parse(JSON.stringify(cvInfo)),
+  );
+
   return (
     <View style={styles.container}>
       <View>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'padding'}>
-          <ScrollView
-            contentContainerStyle={styles.containerContentStyle}
-            showsVerticalScrollIndicator={false}>
-            {Object.keys(editorData).map(item => (
-              <View key={item} style={styles.itemWrapper}>
-                <Text style={styles.title}>
-                  {editorData[item as keyof typeof editorData].title}
-                </Text>
+        {Object.keys(localData).length > 0 && (
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'padding'}>
+            <ScrollView
+              contentContainerStyle={styles.containerContentStyle}
+              showsVerticalScrollIndicator={false}>
+              {Object.keys(localData).map(item => (
+                <View key={item} style={styles.itemWrapper}>
+                  <Text style={styles.title}>
+                    {localData[item as keyof typeof localData].title}
+                  </Text>
 
-                <TextInput
-                  style={styles.value}
-                  placeholder={
-                    editorData[item as keyof typeof editorData].value
-                  }
-                  value={editorData[item as keyof typeof editorData].value}
-                  onChangeText={e => {
-                    setEditorData(prev => {
-                      const newObj = {...prev};
-                      newObj[item as keyof typeof prev].value = e;
-                      return newObj;
-                    });
-                  }}
-                />
+                  <TextInput
+                    style={styles.value}
+                    placeholder={
+                      localData[item as keyof typeof localData].value
+                    }
+                    value={localData[item as keyof typeof localData].value}
+                    onChangeText={e => {
+                      setLocalData(prev => {
+                        const newObj = {...prev};
+                        newObj[item as keyof typeof prev].value = e;
+                        return newObj;
+                      });
+                    }}
+                  />
+                </View>
+              ))}
+              <View style={styles.controlWrapper}>
+                <TouchableOpacity
+                  onPress={() => saveEdit(localData)}
+                  style={styles.saveButton}>
+                  <Text style={styles.saveText}>Save</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  onPress={() => cancel()}
+                  style={styles.cancelButton}>
+                  <Text style={styles.cancelText}>Cancel</Text>
+                </TouchableOpacity>
               </View>
-            ))}
-            <View style={styles.controlWrapper}>
-              <TouchableOpacity
-                onPress={() => saveEdit()}
-                style={styles.saveButton}>
-                <Text style={styles.saveText}>Save</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                onPress={() => cancel()}
-                style={styles.cancelButton}>
-                <Text style={styles.cancelText}>Cancel</Text>
-              </TouchableOpacity>
-            </View>
-          </ScrollView>
-        </KeyboardAvoidingView>
+            </ScrollView>
+          </KeyboardAvoidingView>
+        )}
       </View>
     </View>
   );
