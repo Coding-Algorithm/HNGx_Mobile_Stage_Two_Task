@@ -1,5 +1,11 @@
 import React from 'react';
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {colors} from '../App';
 
 interface CvInfoType {
@@ -21,13 +27,16 @@ interface CvInfoType {
   };
 }
 
-export const Viewer = ({cvInfo}: {cvInfo: CvInfoType}) => {
+export const Viewer = ({
+  cvInfo,
+  setShowEditor,
+}: {
+  cvInfo: CvInfoType;
+  setShowEditor: React.Dispatch<boolean>;
+}) => {
   return (
     <View style={styles.container}>
-      <ScrollView
-        contentContainerStyle={{
-          paddingBottom: 100,
-        }}>
+      <ScrollView contentContainerStyle={styles.contentContainer}>
         {Object.keys(cvInfo).map(item => (
           <View key={item} style={styles.itemWrapper}>
             <Text style={styles.title}>
@@ -39,6 +48,14 @@ export const Viewer = ({cvInfo}: {cvInfo: CvInfoType}) => {
             </Text>
           </View>
         ))}
+
+        <View style={styles.controlWrapper}>
+          <TouchableOpacity
+            onPress={() => setShowEditor(true)}
+            style={styles.editButton}>
+            <Text style={styles.editText}>Edit</Text>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
     </View>
   );
@@ -49,6 +66,9 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: 20,
     paddingTop: 50,
+  },
+  contentContainer: {
+    paddingBottom: 100,
   },
   itemWrapper: {
     marginBottom: 30,
@@ -66,5 +86,22 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 10,
     color: colors.fieldText,
+  },
+  controlWrapper: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  editButton: {
+    width: '100%',
+    paddingVertical: 20,
+    backgroundColor: colors.primary,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
+  },
+  editText: {
+    color: colors.white,
   },
 });

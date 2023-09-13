@@ -63,7 +63,7 @@ function App(): JSX.Element {
   const [cvInfo, setCvInfo] = useState<CvInfoType>(initialData);
 
   // hard coded this because padding initialData would make both cvInfo and editorData use same reference whether I destructure or not
-  const [editorData, setEditorData] = useState<CvInfoType>({
+  const [editorData, setEditorData] = useState({
     fullName: {
       title: 'Full Name',
       value: 'Ibrahim Taofeek Opeyemi',
@@ -84,6 +84,14 @@ function App(): JSX.Element {
 
   const saveEdit = () => {
     setCvInfo(editorData);
+    setShowEditor(false);
+  };
+
+  const cancel = () => {
+    console.log(cvInfo);
+
+    setEditorData(cvInfo);
+    setShowEditor(false);
   };
 
   return (
@@ -110,44 +118,19 @@ function App(): JSX.Element {
           }}>
           {showEditor ? 'CV Editor' : 'CV Viewer'}
         </Text>
-
-        <Text
-          style={{
-            width: showEditor ? '20%' : '30%',
-            textAlign: 'center',
-            fontSize: 13,
-            fontWeight: 'bold',
-            color: colors.secondary,
-          }}
-          onPress={() => {
-            if (showEditor) {
-              saveEdit();
-            }
-
-            setShowEditor(prev => !prev);
-          }}>
-          {showEditor ? 'Save' : 'Edit'}
-        </Text>
-
-        {showEditor ? (
-          <Text
-            style={{
-              width: '20%',
-              textAlign: 'center',
-              fontSize: 13,
-              fontWeight: 'bold',
-              color: colors.secondary,
-            }}
-            onPress={() => setShowEditor(prev => !prev)}>
-            Cancel
-          </Text>
-        ) : null}
       </View>
 
-      {!showEditor ? <Viewer cvInfo={cvInfo} /> : null}
+      {!showEditor ? (
+        <Viewer cvInfo={cvInfo} setShowEditor={setShowEditor} />
+      ) : null}
 
       {showEditor ? (
-        <Editor setEditorData={setEditorData} editorData={editorData} />
+        <Editor
+          setEditorData={setEditorData}
+          saveEdit={saveEdit}
+          cancel={cancel}
+          editorData={editorData}
+        />
       ) : null}
     </SafeAreaView>
   );
